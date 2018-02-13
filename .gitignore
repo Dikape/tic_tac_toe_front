@@ -21,3 +21,4 @@ yarn-debug.log*
 yarn-error.log*
 tic_tac_toe_front.sublime-project
 tic_tac_toe_front.sublime-workspace
+src__/
