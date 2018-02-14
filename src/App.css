@@ -25,6 +25,10 @@
 .auth-btn{
   margin: 5px 10px;
 }
+
+.error-msg{
+  color: red
+}
 /*@keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
