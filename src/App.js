@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch} from "react-router-dom";
-import logo from './logo.svg';
 import './App.css';
 import Home from './components/Home';
 import Register from './components/Register';
@@ -16,17 +15,11 @@ const MainRoutes = () => (
     <Route path="/logout" component={Logout} />
   </Switch>
 )
-class Header extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      'username': sessionStorage.getItem('user_name'),
-    }
-  }
-  render() {
-  const { username } = this.state;
-  let start_game = username? 'New game': '';
+
+
+function Header() {
   let auth_buttons;
+  const username = sessionStorage.getItem('user_name');
   if (username){
     auth_buttons = (
       <Link to='/logout'><button className="btn btn-primary auth-btn">Logout</button></Link>
@@ -42,15 +35,14 @@ class Header extends Component {
   }
   
   return (
-      <header className="App-header">
-        <Link to='/'><h1 className="App-title">{start_game}</h1></Link>
-        <h1 className="App-title">Tic-tac-toe by default react template</h1>
-        <h2>{username}</h2>
-        <div>{auth_buttons}</div>
-      </header>
-    )
-  }
-}
+    <header className="App-header">
+      <Link to='/'><h1 className="App-title">Tic-tac-toe by default react template</h1></Link>
+      
+      <div>{auth_buttons}</div>
+    </header>
+  )
+} 
+
 
 class App extends Component {
 
