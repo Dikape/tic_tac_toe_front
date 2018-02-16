@@ -23,7 +23,7 @@ export default class Register extends Component{
         console.log('handleSubmit');
         response.then((response) => {
           const data = response.data;
-          sessionStorage.setItem('acces_token', data.access_token);
+          sessionStorage.setItem('access_token', data.access_token);
           sessionStorage.setItem('user_name', data.username);
           sessionStorage.setItem('user_id', data.id);
           this.setState({

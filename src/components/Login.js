@@ -39,7 +39,7 @@ export default class Login extends Component{
 	  	let login_response = login(username, password);
 	  	login_response.then((response) => {
 	  		let data = response.data;
-	  		sessionStorage.setItem('acces_token', data.access_token);
+	  		sessionStorage.setItem('access_token', data.access_token);
 	  		this.getUserInfo(data.access_token);
 	  	},
 	  	(error) => {

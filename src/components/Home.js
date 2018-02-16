@@ -15,14 +15,9 @@ export default class Home extends Component{
  		if (username){
  			hello_msg = username;
  			start_game = (
- 				<div>
-			    <div className='row'>
-		        <Link to='/login'><button className="btn btn-create auth-btn">Start hot seat game</button></Link>
-		      </div>	
-		      <div className='row'>
-		        <Link to='/register'><button className="btn btn-create auth-btn">Start online game</button></Link>
-		      </div>
-	      </div>
+		    <div className='row'>
+	        <Link to='/create_game'><button className="btn btn-create auth-btn">Start game</button></Link>
+	      </div>	
 			)
  		}
  		else{

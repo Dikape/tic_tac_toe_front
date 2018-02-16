@@ -5,6 +5,8 @@ import Home from './components/Home';
 import Register from './components/Register';
 import Login from './components/Login';
 import Logout from './components/Logout';
+import CreateGame from './components/CreateGame';
+import Game from './components/GameHotSeat';
 
 
 const MainRoutes = () => (
@@ -13,6 +15,8 @@ const MainRoutes = () => (
     <Route exact path='/login' component={Login} />
     <Route exact path='/register' component={Register} />
     <Route path="/logout" component={Logout} />
+    <Route path="/create_game" component={CreateGame} />
+    <Route path="/game" component={Game} />
   </Switch>
 )
 
