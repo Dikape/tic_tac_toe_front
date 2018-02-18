@@ -23,9 +23,9 @@ export default class Register extends Component{
         console.log('handleSubmit');
         response.then((response) => {
           const data = response.data;
-          sessionStorage.setItem('access_token', data.access_token);
-          sessionStorage.setItem('user_name', data.username);
-          sessionStorage.setItem('user_id', data.id);
+          localStorage.setItem('access_token', data.access_token);
+          localStorage.setItem('user_name', data.username);
+          localStorage.setItem('user_id', data.id);
           this.setState({
             redirect: true
           });

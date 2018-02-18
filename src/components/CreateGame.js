@@ -6,8 +6,8 @@ export default class CreateGame extends Component{
 	constructor (props) {
     super(props);
     this.state = {
-      username: sessionStorage.getItem('user_name'),
-      access_token: sessionStorage.getItem('access_token'),
+      username: localStorage.getItem('user_name'),
+      access_token: localStorage.getItem('access_token'),
       board_size: '',
       game_type: 'hot_seat',
       error_msg: '',		
@@ -49,9 +49,10 @@ export default class CreateGame extends Component{
 
   }
   render() {
-  	const {error_msg, redirect} = this.state;
+  	const {error_msg, redirect, game_type} = this.state;
   	if (redirect) {
-  		return <Redirect to='/game'/>;
+  		let url = '/' + game_type;
+  		return <Redirect to={url} />;
   	};
   	return (
   	  <div className='form-group'>

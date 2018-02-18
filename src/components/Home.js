@@ -5,7 +5,7 @@ export default class Home extends Component{
 	constructor (props) {
     super(props);
     this.state = {
-      'username': sessionStorage.getItem('user_name'),	
+      'username': localStorage.getItem('user_name'),	
     }
   }
   render() {
@@ -17,6 +17,7 @@ export default class Home extends Component{
  			start_game = (
 		    <div className='row'>
 	        <Link to='/create_game'><button className="btn btn-create auth-btn">Start game</button></Link>
+	        <Link to='/choose_game'><button className="btn btn-create auth-btn">Connect to game</button></Link>
 	      </div>	
 			)
  		}

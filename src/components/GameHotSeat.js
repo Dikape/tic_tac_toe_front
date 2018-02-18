@@ -11,7 +11,7 @@ export default class Game extends Component{
     super(props);
     
 	    this.state = {
-    	access_token: sessionStorage.getItem('access_token'),
+    	access_token: localStorage.getItem('access_token'),
       boardSize: null,
       gameId: null,
       boardColls: null,
@@ -97,7 +97,7 @@ export default class Game extends Component{
   		stepNumber: this.state.stepNumber,
   		gameId: this.state.gameId,
   		currentSymbol: currentSymbol,
-  		userId: sessionStorage.getItem('user_id'),
+  		userId: localStorage.getItem('user_id'),
   	}
   	socket.emit('step', data_to_send);
   	this.setState({

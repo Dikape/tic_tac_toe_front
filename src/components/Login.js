@@ -17,8 +17,8 @@ export default class Login extends Component{
     user_response.then(
       (response) =>{
         let data = response.data;
-        sessionStorage.setItem('user_name', data.username);
-        sessionStorage.setItem('user_id', data.id);
+        localStorage.setItem('user_name', data.username);
+        localStorage.setItem('user_id', data.id);
         this.setState({
           redirect: true
         });
@@ -39,7 +39,7 @@ export default class Login extends Component{
 	  	let login_response = login(username, password);
 	  	login_response.then((response) => {
 	  		let data = response.data;
-	  		sessionStorage.setItem('access_token', data.access_token);
+	  		localStorage.setItem('access_token', data.access_token);
 	  		this.getUserInfo(data.access_token);
 	  	},
 	  	(error) => {

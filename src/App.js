@@ -7,30 +7,40 @@ import Login from './components/Login';
 import Logout from './components/Logout';
 import CreateGame from './components/CreateGame';
 import Game from './components/GameHotSeat';
+import OnlineGame from './components/GameHotSeat';
+import ChooseGame from './components/ChooseGame';
 
 
-const MainRoutes = () => (
-  <Switch>
-    <Route exact path='/' component={Home}/>
-    <Route exact path='/login' component={Login} />
-    <Route exact path='/register' component={Register} />
-    <Route path="/logout" component={Logout} />
-    <Route path="/create_game" component={CreateGame} />
-    <Route path="/game" component={Game} />
-  </Switch>
-)
+function MainRoutes(props){
+    const user_name = localStorage.getItem('user_name');
+    if (user_name){
+      return(
+        <Switch>
+          <Route exact path='/' component={Home}/>
+          <Route exact path='/login' component={Login} />
+          <Route exact path='/register' component={Register} />
+          <Route path="/logout" component={Logout} />
+          <Route path="/create_game" component={CreateGame} />
+          <Route path="/choose_game" component={ChooseGame} />
+          <Route path="/hot_seat" component={Game} />
+          <Route path="/online" component={OnlineGame} />
+        </Switch>
+      )
+    }else{
+      return(
+        <Switch>
+          <Route exact path='/' component={Home}/>
+          <Route exact path='/login' component={Login} />
+          <Route exact path='/register' component={Register} />
+        </Switch>
+      )
+    }
+}
 
-const MainRoutesNotAuth = () => (
-  <Switch>
-    <Route exact path='/' component={Home}/>
-    <Route exact path='/login' component={Login} />
-    <Route exact path='/register' component={Register} />
-  </Switch>
-)
 
 function Header() {
   let auth_buttons;
-  const username = sessionStorage.getItem('user_name');
+  const username = localStorage.getItem('user_name');
   if (username){
     auth_buttons = (
       <div>
@@ -61,17 +71,13 @@ function Header() {
 class App extends Component {
 
   render() {
-    const access_token = sessionStorage.getItem('access_token');
-    let body = (<MainRoutesNotAuth />);
-    if (access_token){
-      body = (<MainRoutes  />);
-    }
+
     return (
     <Router>
       <div className="App">
         <Header/>   
         <div className='container'>          
-            {body}
+            <MainRoutes />
         </div>
       </div>
     </Router> 
