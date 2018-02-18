@@ -23,3 +23,11 @@ export function getLastGame(access_token) {
   };
   return axios.get(url, headers);
 }
+
+export function getSteps(access_token, game_id) {
+  const url = `${BASE_URL}/api/v0/steps/${game_id}`;
+ 	const headers =  {
+    headers: { Authorization: "JWT " + access_token }
+  };
+  return axios.get(url, headers);
+}

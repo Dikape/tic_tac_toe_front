@@ -64,7 +64,7 @@ export default class CreateGame extends Component{
 		          Choose size of board(x*x):
 		          <input type="number" 
 		          min="15"
-		          max="100"
+		          max="30"
 		          className="form-control" 
 		          value={this.state.board_size} 
 		          onChange={(event) => this.handleInputChange(event)} />
