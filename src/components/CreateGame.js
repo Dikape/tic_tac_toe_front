@@ -26,7 +26,7 @@ export default class CreateGame extends Component{
   }
   handleSubmit(event){
   	const {access_token, board_size, game_type} = this.state
-  	if (board_size>=15 && board_size<=100){
+  	if (board_size>=15 && board_size<=30){
   		this.setState({
   			error_msg: ''
   		});
@@ -43,7 +43,7 @@ export default class CreateGame extends Component{
   	}
   	else{
   		this.setState({
-  			error_msg: 'Size must be more than 14 and less than 101!'
+  			error_msg: 'Size must be more than 14 and less than 31!'
   		});
   	}
 

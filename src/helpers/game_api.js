@@ -4,10 +4,14 @@ const BASE_URL = 'http://localhost:5000';
 
 
 export function createGame(game_type, board_size, access_token) {
-  const url = `${BASE_URL}/api/v0/game`;
+	let url = `${BASE_URL}/api/v0/online`;
+	if (game_type==='hot_seat'){
+		url = `${BASE_URL}/api/v0/hot_seat`;
+	}
+  
   const data = { 
 		game_type: game_type,
-		board_size: board_size,
+		board_size: board_size,	
 	};
  	const headers =  {
     headers: { Authorization: "JWT " + access_token }
@@ -16,16 +20,16 @@ export function createGame(game_type, board_size, access_token) {
 }
 
 
-export function getLastGame(access_token) {
-  const url = `${BASE_URL}/api/v0/game`;
+export function getLastHotSeatGame(access_token) {
+  const url = `${BASE_URL}/api/v0/hot_seat`;
  	const headers =  {
     headers: { Authorization: "JWT " + access_token }
   };
   return axios.get(url, headers);
 }
 
-export function getSteps(access_token, game_id) {
-  const url = `${BASE_URL}/api/v0/steps/${game_id}`;
+export function getHotSeatSteps(access_token, game_id) {
+  const url = `${BASE_URL}/api/v0/hot_seat/steps/${game_id}`;
  	const headers =  {
     headers: { Authorization: "JWT " + access_token }
   };

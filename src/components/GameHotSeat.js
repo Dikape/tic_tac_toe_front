@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { getLastGame, getSteps } from '../helpers/game_api.js';
+import { Link } from "react-router-dom";
+import { getLastHotSeatGame, getHotSeatSteps } from '../helpers/game_api.js';
 import Board from './Board';
 import openSocket from 'socket.io-client';
 
@@ -18,18 +19,12 @@ export default class Game extends Component{
       stepNumber: 0,
       winner: null,
       error_msg: '',		
-      redirect: false,
+      finished: false,
     }
-  	socket.on('step_result', function(data){
-  		if(data.message!=='saved'){
-
-  		}else{
-  			// alert('fggg')
-  		}
-  	});
+    socket.on('step_result', (data) => this.handleSocketStep(data));
   }
   loadSteps(gameId){
-  	let stepsList = getSteps(this.state.access_token, gameId)
+  	let stepsList = getHotSeatSteps(this.state.access_token, gameId);
   	stepsList.then(
   		(response) => {
   			if(response.data.length){
@@ -52,8 +47,17 @@ export default class Game extends Component{
   		}
   	)
   }
+  handleSocketStep(data){
+  	if(data.message!=='saved'){
+  			this.setState({
+  				winner: data.message,
+  				finished: true
+  			});
+  			alert(data.message)
+		}
+  }
   componentWillMount() {
-  	let game_info = getLastGame(this.state.access_token)
+  	let game_info = getLastHotSeatGame(this.state.access_token)
   	game_info.then(
   		(response) => {
   			const size = response.data.size;
@@ -69,11 +73,14 @@ export default class Game extends Component{
 	  		this.loadSteps(response.data.id)
   		},
  	  	(error) => {
+ 	  		this.setState({
+	    		finished: true, 
+	  		})
   		 	console.log('Dude this is error:')
 				console.log(error.response)
   		}
-  	)
-  }
+  	);
+  }	
 
   handleClick(x, y){
   	const { boardColls, winner } = this.state
@@ -101,8 +108,11 @@ export default class Game extends Component{
   }
 
   render() {
-  	const { boardSize, boardColls } = this.state;
-  	const next_gamer = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+  	const { boardSize, boardColls, winner, finished } = this.state;
+  	let next_gamer = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+  	if (winner || finished){
+  		next_gamer = (<Link to='/create_game'><button className="btn btn-create auth-btn">New game</button></Link>)
+  	}
   	if (boardSize){
 	  	return (
 	  		<div>
@@ -115,6 +125,7 @@ export default class Game extends Component{
   	}else{
 	  	return (
 	  	  <div className=''>
+	  	  {next_gamer}
 	      </div>
 	  	)
   	}

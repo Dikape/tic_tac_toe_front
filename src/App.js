@@ -20,13 +20,23 @@ const MainRoutes = () => (
   </Switch>
 )
 
+const MainRoutesNotAuth = () => (
+  <Switch>
+    <Route exact path='/' component={Home}/>
+    <Route exact path='/login' component={Login} />
+    <Route exact path='/register' component={Register} />
+  </Switch>
+)
 
 function Header() {
   let auth_buttons;
   const username = sessionStorage.getItem('user_name');
   if (username){
     auth_buttons = (
-      <Link to='/logout'><button className="btn btn-primary auth-btn">Logout</button></Link>
+      <div>
+        <Link to='/'>{username}</Link>
+        <Link to='/logout'><button className="btn btn-primary auth-btn">Logout</button></Link>
+      </div>
     );
   }
   else{
@@ -51,12 +61,17 @@ function Header() {
 class App extends Component {
 
   render() {
+    const access_token = sessionStorage.getItem('access_token');
+    let body = (<MainRoutesNotAuth />);
+    if (access_token){
+      body = (<MainRoutes  />);
+    }
     return (
     <Router>
       <div className="App">
         <Header/>   
         <div className='container'>          
-          <MainRoutes  />   
+            {body}
         </div>
       </div>
     </Router> 
