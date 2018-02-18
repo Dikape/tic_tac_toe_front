@@ -1,53 +1,69 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import { getLastHotSeatGame, getHotSeatSteps } from '../helpers/game_api.js';
 import Board from './Board';
 import openSocket from 'socket.io-client';
 
-let socket = openSocket("http://localhost:5000/hot_seat")
+let socket = openSocket("http://localhost:5000/online")
 
-export default class Game extends Component{
+export default class OnlineGame extends Component{
   constructor (props) {
     super(props);
     
       this.state = {
-      access_token: localStorage.getItem('access_token'),
+      gameUUID: sessionStorage.getItem('game_uuid'),
+      userId: localStorage.getItem('user_id'),
+      userName: localStorage.getItem('user_name'),
+      yourSymbol: null,
       boardSize: null,
       gameId: null,
       boardColls: null,
       xIsNext: true,
       stepNumber: 0,
+      author: null,
       winner: null,
       error_msg: '',    
       finished: false,
     }
+    // sessionStorage.clear();
+    socket.on('game_info', (data) => this.handleSocketGameInfo(data));
+    socket.on('cant_connect', (data) => this.handleSocketCantConnect(data));
+    socket.on('game_result', (data) => this.handleSocketGameResult(data));
     socket.on('step_result', (data) => this.handleSocketStep(data));
   }
-  loadSteps(gameId){
-    let stepsList = getHotSeatSteps(this.state.access_token, gameId);
-    stepsList.then(
-      (response) => {
-        if(response.data.length){
-          let boardColls = this.state.boardColls;
-          let stepNumber = 0;
-          response.data.map((step) =>{
-            boardColls[step.x_coordinate][step.y_coordinate] = step.value;
-            stepNumber = step.step_number;
-          })
-          this.setState({
-            boardColls: boardColls,
-            xIsNext: ((stepNumber+1) % 2) === 0 ? true : false,
-            stepNumber: stepNumber+1,
-          })
-        }
-      },
-      (error) => {
-        console.log('Dude this is error:')
-        console.log(error.response)
-      }
-    )
+
+  handleSocketGameInfo(data){
+    const size = data.board_size;
+    const boardColls = Array(size);
+    for (let i = 0; i < size; i++) {
+      boardColls[i] = Array(size).fill(null);
+    }
+    this.setState({
+      boardSize: size, 
+      boardColls: boardColls,
+      gameId: data.game_id,
+      author: data.author,
+      yourSymbol: (this.state.userName===data.author ? 'X' : 'O'),
+    })
+    if(data.steps.length){
+      let stepNumber = 0;
+      data.steps.map((step) =>{
+        boardColls[step.x_coordinate][step.y_coordinate] = step.value;
+        stepNumber = step.step_number;
+      })
+      this.setState({
+        boardColls: boardColls,
+        xIsNext: ((stepNumber+1) % 2) === 0 ? true : false,
+        stepNumber: stepNumber+1,
+      })
+    }
+
   }
-  handleSocketStep(data){
+  handleSocketCantConnect(data){
+    this.setState({
+      error_msg: data.message
+    })
+  }
+  handleSocketGameResult(data){
     if(data.message!=='saved'){
         this.setState({
           winner: data.message,
@@ -56,30 +72,18 @@ export default class Game extends Component{
         alert(data.message)
     }
   }
+  handleSocketStep(data){
+    this.setState({
+      boardColls: data.boardColls,
+      xIsNext: data.xIsNext,
+      stepNumber: data.stepNumber
+    });
+  }
   componentWillMount() {
-    let game_info = getLastHotSeatGame(this.state.access_token)
-    game_info.then(
-      (response) => {
-        const size = response.data.size;
-        const boardColls = Array(size);
-        for (let i = 0; i < size; i++) {
-          boardColls[i] = Array(size).fill(null);
-        }
-        this.setState({
-          boardSize: size, 
-          boardColls: boardColls,
-          gameId: response.data.id
-        })
-        this.loadSteps(response.data.id)
-      },
-      (error) => {
-        this.setState({
-          finished: true, 
-        })
-        console.log('Dude this is error:')
-        console.log(error.response)
-      }
-    );
+    socket.emit('connect_to_game', {
+      gameUUID: this.state.gameUUID,
+      userId: this.state.userId
+    });
   } 
 
   handleClick(x, y){
@@ -88,9 +92,25 @@ export default class Game extends Component{
     if (current_coll || winner){
       return;
     }
-
+    if (this.state.author===this.state.userName && !this.state.xIsNext)
+    {
+      return;
+    }
+    if (this.state.author!==this.state.userName && this.state.xIsNext)
+    {
+      return;
+    }
     let currentSymbol = (this.state.xIsNext ? 'X' : 'O');
     boardColls[x][y] = currentSymbol;
+
+    let stepInfo = {
+      boardColls: boardColls,
+      xIsNext: !this.state.xIsNext,
+      stepNumber: this.state.stepNumber + 1,
+      gameUUID: this.state.gameUUID
+    }
+    this.setState(stepInfo);
+    socket.emit('step', stepInfo);
     let data_to_send = {
       x: x, 
       y:y,
@@ -98,17 +118,14 @@ export default class Game extends Component{
       gameId: this.state.gameId,
       currentSymbol: currentSymbol,
       userId: localStorage.getItem('user_id'),
+      gameUUID: this.state.gameUUID
     }
-    socket.emit('step', data_to_send);
-    this.setState({
-      boardColls: boardColls,
-      xIsNext: !this.state.xIsNext,
-      stepNumber: this.state.stepNumber + 1
-    })
+    socket.emit('get_result', data_to_send);
+
   }
 
   render() {
-    const { boardSize, boardColls, winner, finished } = this.state;
+    const { boardSize, boardColls, winner, finished, error_msg, yourSymbol} = this.state;
     let next_gamer = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     if (winner || finished){
       next_gamer = (<Link to='/create_game'><button className="btn btn-create auth-btn">New game</button></Link>)
@@ -116,7 +133,8 @@ export default class Game extends Component{
     if (boardSize){
       return (
         <div>
-          <h1>{next_gamer}</h1>
+          <h2>{next_gamer}</h2>
+          <h2>Your: {yourSymbol}</h2>
           <div className='row board'>
             <Board boardColls={boardColls} boardSize={boardSize} onClick={(x, y) => this.handleClick(x, y)}/>
           </div>
@@ -125,7 +143,7 @@ export default class Game extends Component{
     }else{
       return (
         <div className=''>
-        {next_gamer}
+        {error_msg}
         </div>
       )
     }

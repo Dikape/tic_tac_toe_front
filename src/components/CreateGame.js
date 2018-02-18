@@ -32,6 +32,7 @@ export default class CreateGame extends Component{
   		});
   		createGame(game_type, board_size, access_token).then(
   			(response) =>{
+  				sessionStorage.setItem('game_uuid', response.data.uuid)
 		  		this.setState({
 		  			redirect: true
 		  		});

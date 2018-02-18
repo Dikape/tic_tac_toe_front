@@ -7,7 +7,7 @@ import Login from './components/Login';
 import Logout from './components/Logout';
 import CreateGame from './components/CreateGame';
 import Game from './components/GameHotSeat';
-import OnlineGame from './components/GameHotSeat';
+import OnlineGame from './components/GameOnline';
 import ChooseGame from './components/ChooseGame';
 
 

@@ -36,7 +36,7 @@ export function getHotSeatSteps(access_token, game_id) {
   return axios.get(url, headers);
 }
 
-export function getStartedOnlineGames(access_token) {
+export function getStartedOnlineGames(access_token) {	
 	const url = `${BASE_URL}/api/v0/online`;
  	const headers =  {
     headers: { Authorization: "JWT " + access_token }
