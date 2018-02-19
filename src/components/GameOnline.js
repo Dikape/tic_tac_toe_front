@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import Board from './Board';
 import openSocket from 'socket.io-client';
-
-let socket = openSocket("http://localhost:5000/online")
+import { BASE_URL } from '../config.js';
 
 export default class OnlineGame extends Component{
   constructor (props) {
@@ -23,12 +22,13 @@ export default class OnlineGame extends Component{
       winner: null,
       error_msg: '',    
       finished: false,
+      socket: openSocket(BASE_URL + "online")
     }
     // sessionStorage.clear();
-    socket.on('game_info', (data) => this.handleSocketGameInfo(data));
-    socket.on('cant_connect', (data) => this.handleSocketCantConnect(data));
-    socket.on('game_result', (data) => this.handleSocketGameResult(data));
-    socket.on('step_result', (data) => this.handleSocketStep(data));
+    this.state.socket.on('game_info', (data) => this.handleSocketGameInfo(data));
+    this.state.socket.on('cant_connect', (data) => this.handleSocketCantConnect(data));
+    this.state.socket.on('game_result', (data) => this.handleSocketGameResult(data));
+    this.state.socket.on('step_result', (data) => this.handleSocketStep(data));
   }
 
   handleSocketGameInfo(data){
@@ -86,7 +86,7 @@ export default class OnlineGame extends Component{
     });
   }
   componentWillMount() {
-    socket.emit('connect_to_game', {
+    this.state.socket.emit('connect_to_game', {
       gameUUID: this.state.gameUUID,
       userId: this.state.userId
     });
@@ -116,7 +116,7 @@ export default class OnlineGame extends Component{
       gameUUID: this.state.gameUUID
     }
     this.setState(stepInfo);
-    socket.emit('step', stepInfo);
+    this.state.socket.emit('step', stepInfo);
     let data_to_send = {
       x: x, 
       y:y,
@@ -126,7 +126,7 @@ export default class OnlineGame extends Component{
       userId: localStorage.getItem('user_id'),
       gameUUID: this.state.gameUUID
     }
-    socket.emit('get_result', data_to_send);
+    this.state.socket.emit('get_result', data_to_send);
 
   }
 

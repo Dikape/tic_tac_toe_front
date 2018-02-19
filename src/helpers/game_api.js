@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const BASE_URL = 'http://localhost:5000';
+import { BASE_URL } from '../config.js';
 
 
 export function createGame(game_type, board_size, access_token) {

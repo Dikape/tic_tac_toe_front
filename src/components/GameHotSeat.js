@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import { getLastHotSeatGame, getHotSeatSteps } from '../helpers/game_api.js';
 import Board from './Board';
 import openSocket from 'socket.io-client';
-
-let socket = openSocket("http://localhost:5000/hot_seat")
+import { BASE_URL } from '../config.js';
 
 export default class Game extends Component{
 	constructor (props) {
@@ -20,8 +19,9 @@ export default class Game extends Component{
       winner: null,
       error_msg: '',		
       finished: false,
+      socket: openSocket(BASE_URL+"hot_seat")
     }
-    socket.on('step_result', (data) => this.handleSocketStep(data));
+    this.state.socket.on('step_result', (data) => this.handleSocketStep(data));
   }
   loadSteps(gameId){
   	let stepsList = getHotSeatSteps(this.state.access_token, gameId);
@@ -99,7 +99,7 @@ export default class Game extends Component{
   		currentSymbol: currentSymbol,
   		userId: localStorage.getItem('user_id'),
   	}
-  	socket.emit('step', data_to_send);
+  	this.state.socket.emit('step', data_to_send);
   	this.setState({
   		boardColls: boardColls,
   		xIsNext: !this.state.xIsNext,
