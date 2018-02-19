@@ -9,8 +9,8 @@ import CreateGame from './components/CreateGame';
 import Game from './components/GameHotSeat';
 import OnlineGame from './components/GameOnline';
 import ChooseGame from './components/ChooseGame';
-import GameHistory from './components/GameHistory';
-import GamesHistory from './components/GamesHistory';
+import GameHistory from './components/HistoryGame';
+import GamesHistory from './components/HistoryGames';
 
 
 function MainRoutes(props){
