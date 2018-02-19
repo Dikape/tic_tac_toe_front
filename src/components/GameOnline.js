@@ -44,6 +44,12 @@ export default class OnlineGame extends Component{
       author: data.author,
       yourSymbol: (this.state.userName===data.author ? 'X' : 'O'),
     })
+    if(data.finished){
+      this.setState({
+        finished: true, 
+        winner: data.finished
+      })
+    }
     if(data.steps.length){
       let stepNumber = 0;
       data.steps.map((step) =>{
@@ -60,7 +66,7 @@ export default class OnlineGame extends Component{
   }
   handleSocketCantConnect(data){
     this.setState({
-      error_msg: data.message
+      error_msg: data.message,
     })
   }
   handleSocketGameResult(data){
@@ -127,14 +133,18 @@ export default class OnlineGame extends Component{
   render() {
     const { boardSize, boardColls, winner, finished, error_msg, yourSymbol} = this.state;
     let next_gamer = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-    if (winner || finished){
+    let your_symbol = 'Your: ' + yourSymbol;
+    if (finished){
       next_gamer = (<Link to='/create_game'><button className="btn btn-create auth-btn">New game</button></Link>)
+    }
+    if (winner){
+      your_symbol = winner;
     }
     if (boardSize){
       return (
         <div>
           <h2>{next_gamer}</h2>
-          <h2>Your: {yourSymbol}</h2>
+          <h2>{your_symbol}</h2>
           <div className='row board'>
             <Board boardColls={boardColls} boardSize={boardSize} onClick={(x, y) => this.handleClick(x, y)}/>
           </div>

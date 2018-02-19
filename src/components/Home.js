@@ -18,6 +18,7 @@ export default class Home extends Component{
 		    <div className='row'>
 	        <Link to='/create_game'><button className="btn btn-create auth-btn">Start game</button></Link>
 	        <Link to='/choose_game'><button className="btn btn-create auth-btn">Connect to game</button></Link>
+	        <Link to='/finished_games'><button className="btn btn-create auth-btn">Finished games</button></Link>
 	      </div>	
 			)
  		}

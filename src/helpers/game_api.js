@@ -43,3 +43,19 @@ export function getStartedOnlineGames(access_token) {
   };
   return axios.get(url, headers);
 }
+
+export function getFinishedGamesForUser(access_token) {	
+	const url = `${BASE_URL}/api/v0/finished_games`;
+ 	const headers =  {
+    headers: { Authorization: "JWT " + access_token }
+  };
+  return axios.get(url, headers);
+}
+
+export function getFinishedGameHistory(access_token, game_id) {	
+	const url = `${BASE_URL}/api/v0/game_history/${game_id}`;
+ 	const headers =  {
+    headers: { Authorization: "JWT " + access_token }
+  };
+  return axios.get(url, headers);
+}

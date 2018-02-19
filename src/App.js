@@ -9,6 +9,8 @@ import CreateGame from './components/CreateGame';
 import Game from './components/GameHotSeat';
 import OnlineGame from './components/GameOnline';
 import ChooseGame from './components/ChooseGame';
+import GameHistory from './components/GameHistory';
+import GamesHistory from './components/GamesHistory';
 
 
 function MainRoutes(props){
@@ -24,6 +26,8 @@ function MainRoutes(props){
           <Route path="/choose_game" component={ChooseGame} />
           <Route path="/hot_seat" component={Game} />
           <Route path="/online" component={OnlineGame} />
+          <Route path="/finished_games" component={GamesHistory} />
+          <Route path="/game_history" component={GameHistory} />
         </Switch>
       )
     }else{
