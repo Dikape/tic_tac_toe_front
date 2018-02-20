@@ -31,12 +31,14 @@ export default class Register extends Component{
           });
         },
         (error) => {
-          const data = error.response.data;
-          this.setState({
-            error_msg: data.message,
-            username: '',
-            password: '',
-          });
+          const data = error.response;
+          console.log(data);
+          console.log(error)
+          // this.setState({
+          //   error_msg: data.message,
+          //   username: '',
+          //   password: '',
+          // });
         })
       }
       else{

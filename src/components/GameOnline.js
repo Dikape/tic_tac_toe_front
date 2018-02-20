@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import Board from './Board';
 import openSocket from 'socket.io-client';
-import { BASE_URL } from '../config.js';
+import { SOCKET_URL } from '../config.js';
 
 export default class OnlineGame extends Component{
   constructor (props) {
@@ -22,7 +22,7 @@ export default class OnlineGame extends Component{
       winner: null,
       error_msg: '',    
       finished: false,
-      socket: openSocket(BASE_URL + "online")
+      socket: openSocket(SOCKET_URL+'online')
     }
     // sessionStorage.clear();
     this.state.socket.on('game_info', (data) => this.handleSocketGameInfo(data));
@@ -91,7 +91,12 @@ export default class OnlineGame extends Component{
       userId: this.state.userId
     });
   } 
-
+  componentDidMount() {
+    this.state.socket.emit('connect_to_game', {
+      gameUUID: this.state.gameUUID,
+      userId: this.state.userId
+    });
+  } 
   handleClick(x, y){
     const { boardColls, winner } = this.state
     let current_coll = boardColls[x][y]
