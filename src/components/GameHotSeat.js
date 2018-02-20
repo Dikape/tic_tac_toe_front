@@ -9,7 +9,7 @@ export default class Game extends Component{
 	constructor (props) {
     super(props);
     
-	    this.state = {
+    this.state = {
     	access_token: localStorage.getItem('access_token'),
       boardSize: null,
       gameId: null,

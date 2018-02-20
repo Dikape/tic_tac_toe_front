@@ -8,7 +8,7 @@ export default class OnlineGame extends Component{
   constructor (props) {
     super(props);
     
-      this.state = {
+    this.state = {
       gameUUID: sessionStorage.getItem('game_uuid'),
       userId: localStorage.getItem('user_id'),
       userName: localStorage.getItem('user_name'),

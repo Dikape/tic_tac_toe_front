@@ -3,16 +3,20 @@ import { BASE_URL } from '../config.js';
 
 
 export function register(username, password) {
-  const url = `${BASE_URL}/api/v0/registration`;
+  const url = `${BASE_URL}api/v0/registration`;
   const data = { 
   	username: username,
   	password: password,
    }
-  return axios.post(url, data);
+  return axios.post(url, data, {
+    headers: { "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json"
+              }
+   });
 }
 
 export function login(username, password) {
-  const url = `${BASE_URL}/api/v0/login`;
+  const url = `${BASE_URL}api/v0/login`;
   const data = { 
   	username: username,
   	password: password,
@@ -21,7 +25,7 @@ export function login(username, password) {
 }
 
 export function getUser(access_token) {
-  const url = `${BASE_URL}/api/v0/user`;
+  const url = `${BASE_URL}api/v0/user`;
   return axios.get(url, {
     headers: { Authorization: "JWT " + access_token }
    });
